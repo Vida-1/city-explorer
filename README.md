@@ -1,10 +1,11 @@
 # City-Explorer 6
 
 **Author**: Vida Powell
-**Version**: 1.0.0 (increment the patch/fix version number if you make more commits past your first submission)
+**Version**: 1.0.0 <!-- (increment the patch/fix version number if you make more commits past your first submission) -->
 
 ## Overview
 This project is a React construction that uses the Axios library to make user-initiated requests for data from third-party APIs.
+User enters the name of a location to see the exact latitude and longitude of that location on screen.
 
 ## Getting Started
 To build and get this app running on your own machine: ______________________________________
