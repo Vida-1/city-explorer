@@ -15,22 +15,35 @@ class Main extends React.Component {
       locationName: '',
       lattitude: 0,
       longitude: 0,
-      locationMap: ''
+      locationMap: '',
+      errorMessage: '',
+      // displayError: false
     }
   }
 
   handleLocation = async () => {
-    const restAPIDataURL = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATION_API_KEY}&q=${this.state.searchQuery}&format=json`;
-    const response = await axios.get(restAPIDataURL);
+    try {
+      const restAPIDataURL = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATION_API_KEY}&q=${this.state.searchQuery}&format=json`;
+      const response = await axios.get(restAPIDataURL);
 
+      console.log("Response from Axios: ", response.data[0].display_name);
+      this.setState({
+        locationName: response.data[0].display_name,
+        lattitude: response.data[0].lat,
+        longitude: response.data[0].lon,
+        locationMap: `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATION_API_KEY}&center=${response.data[0].lat},${response.data[0].lon}&zoom=10` // the "zoom" bit is included thanks to Zayah's code review share!
+      })
+    } catch (error) {
+      // console.error('Error data: ', error.response.data);  --troubleshooting with TAs
+      console.error('Error 2 status: ', error.response.status);
+      // console.error('Error 3 headers: ', error.response.headers);   --troubleshooting with TAs
 
-    console.log("Response from Axios: ", response.data[0].display_name);
-    this.setState({
-      locationName: response.data[0].display_name,
-      lattitude: response.data[0].lat,
-      longitude: response.data[0].lon,
-      locationMap: `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATION_API_KEY}&center=${response.data[0].lat},${response.data[0].lon}&zoom=10` // the "zoom" bit is included thanks to Zayah's code review share!
-    })
+      this.setState({
+        // displayError: true,
+        errorMessage: `Status Code is ${error.response.status} ${error.message}`,
+        locationMap: `https://httpstatusdogs.com/img/${error.response.status}.jpg`
+      });
+    }
   }
 
   updateSearchQuery = (e) => {
@@ -54,19 +67,21 @@ class Main extends React.Component {
             onChange={this.updateSearchQuery}
           />
 
-
           <Button onClick={this.handleLocation}>Explore!</Button>
         </Form>
         {this.state.locationName &&
           <>
             <p>The city we searched for is </p>
-            <p font-style="bold">{this.state.locationName}.</p>
-            <p font-style="italic">It is located at lattitude: {this.state.lattitude}  and longitude: {this.state.longitude}.</p>
+            <p>{this.state.locationName}.</p>
+            <p>It is located at lattitude: {this.state.lattitude}  and longitude: {this.state.longitude}.</p>
           </>}
         {this.state.locationMap &&
-          <Image src={this.state.locationMap} />
+          <>  <Image id="map" src={this.state.locationMap} alt="image map or error"/>
+        <p id="errorMessage">{this.state.errorMessage}</p></>
         }
+        
       </>
+
     )
   };
 };
