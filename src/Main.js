@@ -3,8 +3,7 @@ import axios from 'axios';
 import { Form, Button } from 'react-bootstrap';
 import Image from 'react-bootstrap/Image';
 import './Main.css';
-
-// import Button from 'react';
+import Weather from './Weather.js';
 
 class Main extends React.Component {
 
@@ -34,10 +33,7 @@ class Main extends React.Component {
         locationMap: `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATION_API_KEY}&center=${response.data[0].lat},${response.data[0].lon}&zoom=10` // the "zoom" bit is included thanks to Zayah's code review share!
       })
     } catch (error) {
-      // console.error('Error data: ', error.response.data);  --troubleshooting with TAs
       console.error('Error 2 status: ', error.response.status);
-      // console.error('Error 3 headers: ', error.response.headers);   --troubleshooting with TAs
-
       this.setState({
         // displayError: true,
         errorMessage: `Status Code is ${error.response.status} ${error.message}`,
@@ -54,9 +50,9 @@ class Main extends React.Component {
     // console.log("this.state in App.js: ", this.state);
     // the Form feature used below is based on a code block from W3 schools
     return (
-      <>
+      <div id="body1">
 
-        <Form onSubmit={this.handleLocation}>
+        <Form id="form1" onSubmit={this.handleLocation}>
 
           <p>Please enter the name of a major city.</p>
           <Form.Label>Enter city name </Form.Label>
@@ -67,7 +63,7 @@ class Main extends React.Component {
             onChange={this.updateSearchQuery}
           />
 
-          <Button onClick={this.handleLocation}>Explore!</Button>
+          <Button id = "exploreButton" onClick={this.handleLocation}>Explore!</Button>
         </Form>
         {this.state.locationName &&
           <>
@@ -79,8 +75,8 @@ class Main extends React.Component {
           <>  <Image id="map" src={this.state.locationMap} alt="image map or error"/>
         <p id="errorMessage">{this.state.errorMessage}</p></>
         }
-        
-      </>
+        <Weather />
+      </div>
 
     )
   };
