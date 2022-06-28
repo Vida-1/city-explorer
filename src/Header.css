@@ -1,7 +1,9 @@
-h1 {
+* {
   background-color: black;
   color: beige;
   font-style: italic;
   padding: .75em;
-  margin: 1em;
+  margin: .25em;
+  text-align: center;
+  align-content: center;
 }
