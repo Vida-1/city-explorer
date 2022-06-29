@@ -6,20 +6,13 @@
   text-align: center;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
-
 #map {
   margin-top: 20px;
 }
-
 #exploreButton {
   margin-top: 1em;
   margin-bottom: 2em;
 }
-
-/* #inputCity {
-  width: 50%;
-} */
-
 #errorMessage {
   color: #FF2E2E;
   font-size: larger;
