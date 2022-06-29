@@ -3,13 +3,13 @@ import { Card, Row, Col } from 'react-bootstrap';
 
 class Movies extends React.Component {
   render() {
-    return (  // use parentheses rather than curlies when returning multiple lines of JSx
+    return (
       <div>
         <h3>Movies</h3>
-        <Row> sm={2} md={3} lg={4}
+        <Row sm={2} md={3} lg={4}>
           {this.props.moviesArr.map((movie, idx) => (
             <Col>
-              <Card style={{ width: "18rem" }}>
+              <Card key={idx} style={{ width: "18rem" }}>
                 <Card.Img
                   variant="top"
                   src={movie.image_url}
@@ -20,7 +20,8 @@ class Movies extends React.Component {
                   <Card.Text>Overview: {movie.overview}</Card.Text>
                   <Card.Text>Released on: {movie.released_on}</Card.Text>
                 </Card.Body>
-              </Card></Col>
+              </Card>
+            </Col>
           ))}
         </Row>
       </div>

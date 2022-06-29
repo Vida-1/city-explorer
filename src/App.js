@@ -22,9 +22,9 @@ class App extends React.Component {
       errorMessage: '',
       weatherArr: [],
       locationMap: '',
-      lattitude: 0,
-      longitude: 0,
-      moviesArr: [],
+      lattitude: '',
+      longitude: '',
+      moviesArr: []
     };
   }
 
@@ -49,7 +49,7 @@ class App extends React.Component {
       }, this.getWeatherAndMovies);
       // When a city search successfully returns `lot` and `lon` info, immediately create a new request (lat/lon included) to your server's `/weather` endpoint.
 
-      this.getWeather();
+      // this.getWeather(); //duplication
     } catch (error) {
       this.setState({
         showError: true,  // turning on the error display
@@ -59,45 +59,42 @@ class App extends React.Component {
     }
   }
 
-
   getWeatherAndMovies = () => {
     this.getWeather();
     this.getMovies();
   }
 
   getWeather = async () => {
-    const url = `http://localhost:3001/weather?lat=${this.state.locationObj.lat}&lon=${this.state.locationObj.lon}&searchQuery=${this.state.city}`;
-
+    const url = `${process.env.REACT_APP_SERVER}/weather?lat=${this.state.lattitude}&lon=${this.state.longitude}&searchQuery=${this.state.city}`
+    // const url = `https://api.weatherbit.io/v2.0/alerts?lat=${this.state.locationObj.lat}&lon=${this.state.locationObj.lon}&key=${process.env.WEATHER_API_KEY}`;
     try {
       let response = await axios.get(url);
       console.log('Weather response: ', response.data);
       this.setState({
-        weatherArr: response.data,
-        showError: true
+        weatherArr: response.data
       });
     } catch (error) {
       this.setState({
-        showError: true, 
-        errorMessage: error.response.status + ': ' + error.response.data.error,
+        showError: true,
+        errorMessage: error.response.status + ': ' + error.response.data.error
       })
     }
   }
 
-
   getMovies = async () => {
-    const url = `http://localhost:3001/movies?searchQuery=${this.state.city}`;
+    const url = `${process.env.REACT_APP_SERVER}/movies?searchQuery=${this.state.city}`;
 
     try {
       let response = await axios.get(url);
       console.log('Movies response: ', response.data);
       this.setState({
-        moviesArr: response.data,
-        showError: true
+        moviesArr: response.data
       });
+
     } catch (error) {
       this.setState({
         showError: true,
-        errorMessage: error.response.status + ': ' + error.response.data.error,
+        errorMessage: error.response.status + ': ' + error.response.data.error
       })
     }
   }
@@ -115,24 +112,16 @@ class App extends React.Component {
             <Button id='exploreButton' type='submit'>Search </Button>
           </Form>
         </Container>
-        {/* the conditional below does not appear to be working because this container remains visible even when an invalid cityName is searched. */}
         {this.state.locationObj.display_name &&
           <Container className='container' id='body'>
             <p>You searched for:</p>
             <p>{this.state.locationObj.display_name}</p>
             <p>Lat/Lon: {this.state.locationObj.lat}, {this.state.locationObj.lon}</p>
             <Image className='map' rounded src={this.state.locationMap} alt={this.state.locationObj.display_name} />
-            {/* When the server returns the array of forecast data, show the Weather component, populated with the server data. */}
-            <Weather id='weather' weatherArr={this.state.weatherArr} />
+            <Weather id='weather' weatherArr={this.state.weatherArr}>This is where the weather goes! Test: {this.state.weatherArr}</Weather>
             <Movies moviesArr={this.state.moviesArr} />
           </Container>
         }
-
-        
-        {/* {this.state.showError &&
-          <Alert variant='danger' > {this.state.errorMessage}</Alert>
-        } */}
-
         <Footer />
       </div>
     );
