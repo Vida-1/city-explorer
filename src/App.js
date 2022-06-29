@@ -9,6 +9,7 @@ import Image from 'react-bootstrap/Image';
 import Weather from './Weather';
 import Header from './Header';
 import Footer from './Footer';
+import Movies from './Movies';
 
 class App extends React.Component {
   constructor(props) {
@@ -22,9 +23,11 @@ class App extends React.Component {
       weatherArr: [],
       locationMap: '',
       lattitude: 0,
-      longitude: 0
+      longitude: 0,
+      moviesArr: [],
     };
   }
+
   handleChange = (event) => {
     let typedCity = event.target.value;
     this.setState({ city: typedCity });
@@ -43,7 +46,7 @@ class App extends React.Component {
         lattitude: response.data[0].lat,
         longitude: response.data[0].lon,
         locationMap: `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&center=${response.data[0].lat},${response.data[0].lon}&zoom=12`
-      }, this.getWeather);
+      }, this.getWeatherAndMovies);
       // When a city search successfully returns `lot` and `lon` info, immediately create a new request (lat/lon included) to your server's `/weather` endpoint.
 
       this.getWeather();
@@ -54,6 +57,12 @@ class App extends React.Component {
         errorMessage: error.response.status + ': ' + error.response.data.error
       })
     }
+  }
+
+
+  getWeatherAndMovies = () => {
+    this.getWeather();
+    this.getMovies();
   }
 
   getWeather = async () => {
@@ -68,11 +77,31 @@ class App extends React.Component {
       });
     } catch (error) {
       this.setState({
-        showError: true, // turned on display error
+        showError: true, 
         errorMessage: error.response.status + ': ' + error.response.data.error,
       })
     }
   }
+
+
+  getMovies = async () => {
+    const url = `http://localhost:3001/movies?searchQuery=${this.state.city}`;
+
+    try {
+      let response = await axios.get(url);
+      console.log('Movies response: ', response.data);
+      this.setState({
+        moviesArr: response.data,
+        showError: true
+      });
+    } catch (error) {
+      this.setState({
+        showError: true,
+        errorMessage: error.response.status + ': ' + error.response.data.error,
+      })
+    }
+  }
+
 
   render() {
     console.log("This.state in App.js: ", this.state);
@@ -95,6 +124,7 @@ class App extends React.Component {
             <Image className='map' rounded src={this.state.locationMap} alt={this.state.locationObj.display_name} />
             {/* When the server returns the array of forecast data, show the Weather component, populated with the server data. */}
             <Weather id='weather' weatherArr={this.state.weatherArr} />
+            <Movies moviesArr={this.state.moviesArr} />
           </Container>
         }
 
