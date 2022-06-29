@@ -22,8 +22,8 @@ class App extends React.Component {
       errorMessage: '',
       weatherArr: [],
       locationMap: '',
-      lattitude: 0,
-      longitude: 0,
+      lattitude: '',
+      longitude: '',
       moviesArr: []
     };
   }
@@ -49,7 +49,7 @@ class App extends React.Component {
       }, this.getWeatherAndMovies);
       // When a city search successfully returns `lot` and `lon` info, immediately create a new request (lat/lon included) to your server's `/weather` endpoint.
 
-      this.getWeather();
+      // this.getWeather(); //duplication
     } catch (error) {
       this.setState({
         showError: true,  // turning on the error display
@@ -59,14 +59,13 @@ class App extends React.Component {
     }
   }
 
-
   getWeatherAndMovies = () => {
     this.getWeather();
     this.getMovies();
   }
 
   getWeather = async () => {
-    const url = `http://localhost:3001/weather?lat=${this.state.locationObj.lat}&lon=${this.state.locationObj.lon}&searchQuery=${this.state.city}`
+    const url = `${process.env.REACT_APP_SERVER}/weather?lat=${this.state.lattitude}&lon=${this.state.longitude}&searchQuery=${this.state.city}`
     // const url = `https://api.weatherbit.io/v2.0/alerts?lat=${this.state.locationObj.lat}&lon=${this.state.locationObj.lon}&key=${process.env.WEATHER_API_KEY}`;
     try {
       let response = await axios.get(url);
@@ -83,7 +82,7 @@ class App extends React.Component {
   }
 
   getMovies = async () => {
-    const url = `http://localhost:3001/movies?searchQuery=${this.state.city}`;
+    const url = `${process.env.REACT_APP_SERVER}/movies?searchQuery=${this.state.city}`;
 
     try {
       let response = await axios.get(url);

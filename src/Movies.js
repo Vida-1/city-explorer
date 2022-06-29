@@ -9,7 +9,7 @@ class Movies extends React.Component {
         <Row sm={2} md={3} lg={4}>
           {this.props.moviesArr.map((movie, idx) => (
             <Col>
-              <Card style={{ width: "18rem" }}>
+              <Card key={idx} style={{ width: "18rem" }}>
                 <Card.Img
                   variant="top"
                   src={movie.image_url}
