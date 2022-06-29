@@ -1,8 +1,6 @@
 import React from 'react';
 import Accordion from 'react-bootstrap/Accordion';
 
-// Create a new `Weather.js` component to render forecast data to the page.
-
 class Weather extends React.Component {
   render() {
     return (
